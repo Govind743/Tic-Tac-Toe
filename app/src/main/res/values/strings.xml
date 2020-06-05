@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Tic Tac Toe</string>
+    <string name="textView">Please Begin!!</string>
+    <string name="imageButton">ImageButton for onClick</string>
+</resources>
