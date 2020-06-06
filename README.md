@@ -1,2 +1,2 @@
 # Tic-Tac-Toe 
-It's a game
+It's just a game
