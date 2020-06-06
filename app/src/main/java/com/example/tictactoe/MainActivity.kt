@@ -13,6 +13,7 @@ import android.widget.ImageButton
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.AppCompatImageView
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -41,6 +42,16 @@ class MainActivity : AppCompatActivity() {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
 
         playingplayer = PLAYINGPLAYER.FIRST_PLAYER
+
+        imageButton1.setImageResource(R.drawable.rectangle)
+        imageButton2.setImageResource(R.drawable.rectangle)
+        imageButton3.setImageResource(R.drawable.rectangle)
+        imageButton4.setImageResource(R.drawable.rectangle)
+        imageButton5.setImageResource(R.drawable.rectangle)
+        imageButton6.setImageResource(R.drawable.rectangle)
+        imageButton7.setImageResource(R.drawable.rectangle)
+        imageButton8.setImageResource(R.drawable.rectangle)
+        imageButton9.setImageResource(R.drawable.rectangle)
     }
 
     fun imgButtonClicked(view: View) {
@@ -63,8 +74,9 @@ class MainActivity : AppCompatActivity() {
         action(optionNumber, selectedImageButton)
     }
 
-    private fun action(optionNumber: Int, selectedImageButton: ImageButton) {
+    private fun action(optionNumber: Int, _selectedImageButton: ImageButton) {
 
+        var selectedImageButton = _selectedImageButton
         if(playingplayer == PLAYINGPLAYER.FIRST_PLAYER){
             selectedImageButton.setImageResource(R.drawable.x)
             player1Option.add(optionNumber)
@@ -73,12 +85,66 @@ class MainActivity : AppCompatActivity() {
             playingplayer = PLAYINGPLAYER.SECOND_PLAYER
         }
 
-        else if(playingplayer == PLAYINGPLAYER.SECOND_PLAYER){
-            selectedImageButton.setImageResource(R.drawable.zero)
-            player2Option.add(optionNumber)
-            selectedImageButton.isEnabled = false
-            allDisabledImages.add(selectedImageButton)
-            playingplayer = PLAYINGPLAYER.FIRST_PLAYER
+        if(playingplayer == PLAYINGPLAYER.SECOND_PLAYER){
+            //Algorithm for playing with ourself
+//            selectedImageButton.setImageResource(R.drawable.zero)
+//            player2Option.add(optionNumber)
+//            selectedImageButton.isEnabled = false
+//            allDisabledImages.add(selectedImageButton)
+//            playingplayer = PLAYINGPLAYER.FIRST_PLAYER
+
+
+            // Algorithm for playing with the computer
+            val notSelectedImageNumbers = ArrayList<Int>()
+
+            for (imageNumber in 1..9) {
+
+                if (!(player1Option.contains(imageNumber))){
+
+                    if (!player2Option.contains(imageNumber)) {
+
+                        // notSelectedImageNumbers is created in order to hold
+                        // the image numbers of the image buttons that are not selected
+                        notSelectedImageNumbers.add(imageNumber)
+                    }
+
+                }
+
+            }
+
+            try {
+
+
+                val randomNumber = ((Math.random() * notSelectedImageNumbers.size)).toInt()
+                val imageNumber = notSelectedImageNumbers[randomNumber]
+                when (imageNumber) {
+
+                    1 -> selectedImageButton = imageButton1
+                    2 -> selectedImageButton = imageButton2
+                    3 -> selectedImageButton = imageButton3
+                    4 -> selectedImageButton = imageButton4
+                    5 -> selectedImageButton = imageButton5
+                    6 -> selectedImageButton = imageButton6
+                    7 -> selectedImageButton = imageButton7
+                    8 -> selectedImageButton = imageButton8
+                    9 -> selectedImageButton = imageButton9
+
+                }
+                selectedImageButton.setImageResource(R.drawable.zero)
+                player2Option.add(imageNumber)
+                selectedImageButton.isEnabled = false
+                allDisabledImages.add(selectedImageButton)
+                playingplayer = PLAYINGPLAYER.FIRST_PLAYER
+
+
+
+
+            } catch (e: Exception) {
+
+                e.printStackTrace()
+
+            }
+
         }
 
         specifyWinner()
@@ -158,6 +224,7 @@ class MainActivity : AppCompatActivity() {
             createAlert("Player2 wins", "Congratulations to Player2", AlertDialog.BUTTON_POSITIVE, "OK", false)
         }
 
+        checkDrawState()
     }
 
     private fun createAlert(title: String, msg: String, btnState: Int, btnText: String, btnCancel: Boolean) {
@@ -168,13 +235,47 @@ class MainActivity : AppCompatActivity() {
 
         alertDialog.setButton(btnState, btnText, {
                 dialog: DialogInterface?, which: Int ->
-
-
             resetGame()
-
         })
+
         alertDialog.setCancelable(btnCancel)
 
         alertDialog.show()
+    }
+
+    private fun resetGame() {
+        player1Option.clear()
+        player2Option.clear()
+        allDisabledImages.clear()
+        winner = WINNER.NO_ONE
+        playingplayer = PLAYINGPLAYER.FIRST_PLAYER
+
+        imageButton1.setImageResource(R.drawable.rectangle)
+        imageButton2.setImageResource(R.drawable.rectangle)
+        imageButton3.setImageResource(R.drawable.rectangle)
+        imageButton4.setImageResource(R.drawable.rectangle)
+        imageButton5.setImageResource(R.drawable.rectangle)
+        imageButton6.setImageResource(R.drawable.rectangle)
+        imageButton7.setImageResource(R.drawable.rectangle)
+        imageButton8.setImageResource(R.drawable.rectangle)
+        imageButton9.setImageResource(R.drawable.rectangle)
+
+
+        imageButton1.isEnabled = true
+        imageButton2.isEnabled = true
+        imageButton3.isEnabled = true
+        imageButton4.isEnabled = true
+        imageButton5.isEnabled = true
+        imageButton6.isEnabled = true
+        imageButton7.isEnabled = true
+        imageButton8.isEnabled = true
+        imageButton9.isEnabled = true
+    }
+
+private fun checkDrawState() {
+    if(allDisabledImages.size==9 && winner!= WINNER.PLAYER_ONE && winner!= WINNER.PLAYER_ONE) {
+
+        createAlert("Draw", "No One wins the game!!", AlertDialog.BUTTON_POSITIVE, "OK", false)
+        }
     }
 }
